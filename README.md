@@ -1,6 +1,9 @@
 ## 画面遷移図
 Figma: https://www.figma.com/design/sJmnNrz7tWEs8AsepkVo9O/%E7%84%A1%E9%A1%8C?node-id=0-1&t=hIDEs2xX9ivLZE4m-0
 
+## ER図
+draw.io: https://app.diagrams.net/#G19quS_3lkGwqW3ZynzgqV0dIbO_Qq8T_c#%7B%22pageId%22%3A%22R2lEEEUBdFMjLlhIrx00%22%7D
+
 ## サービス概要
 ユーザーが日々の感謝の気持ちを視覚的に表現し、記録するためのウェブアプリケーションです。ユーザー同士で感謝の気持ちを共有します。感謝のメッセージを投稿することで「木」が成長し、枝や葉が増えていく様子を楽しむことができます。ユーザーは、普段言葉にできない感謝の気持ちを視覚化し、他のユーザーと共有することで、ポジティブな気持ちを広げることができます。
 
