@@ -1,9 +1,30 @@
-<h1 class="text-3xl font-bold underline">
-    Hello world!
-</h1>
+<div class="min-h-screen flex flex-col">
+  <header class="bg-teal-700 text-white p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">タイトル</h1>
+    <div>
+      <%= link_to '新規登録', '#', class: 'btn btn-ghost' %>
+      <%= link_to 'ログイン', '#', class: 'btn btn-ghost' %>
+    </div>
+  </header>
 
-<button class="bg-gray-900 hover:bg-gray-800 text-white rounded px-4 py-2">tailwind</button>
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-6">サービス概要</h2>
+    <p class="mb-8">サービスの概要を記述。</p>
 
-<button class="btn">daisyUI</button>
+    <h2 class="text-3xl font-bold mb-6">使い方</h2>
+    <p class="mb-8">使い方の説明。</p>
 
-<button class="btn btn-secondary">btn btn-secondary</button>
+    <div class="flex justify-center space-x-6">
+      <%= link_to '新規登録', '#', class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 border-none text-xl py-3 px-6 shadow-lg' %>
+      <%= link_to 'ログイン', '#', class: 'btn btn-secondary bg-teal-700 hover:bg-teal-800 border-none text-xl py-3 px-6 shadow-lg' %>
+</div>
+  </main>
+
+  <footer class="bg-gray-100 py-4">
+    <div class="container mx-auto px-4 flex justify-between">
+      <%= link_to '利用規約', '#', class: 'link' %>
+      <%= link_to 'プライバシーポリシー', '#', class: 'link' %>
+      <%= link_to 'お問い合わせ', '#', class: 'link' %>
+    </div>
+  </footer>
+</div>
