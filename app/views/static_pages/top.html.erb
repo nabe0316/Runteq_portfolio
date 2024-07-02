@@ -2,8 +2,12 @@
   <header class="bg-teal-700 text-white p-4 flex justify-between items-center">
     <h1 class="text-2xl font-bold">タイトル</h1>
     <div>
-      <%= link_to '新規登録', '#', class: 'btn btn-ghost' %>
-      <%= link_to 'ログイン', '#', class: 'btn btn-ghost' %>
+      <% if user_signed_in? %>
+        <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'btn btn-ghost' %>
+      <% else %>
+        <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-ghost' %>
+        <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-ghost' %>
+      <% end %>
     </div>
   </header>
 
@@ -15,9 +19,9 @@
     <p class="mb-8">使い方の説明。</p>
 
     <div class="flex justify-center space-x-6">
-      <%= link_to '新規登録', '#', class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 border-none text-xl py-3 px-6 shadow-lg' %>
-      <%= link_to 'ログイン', '#', class: 'btn btn-secondary bg-teal-700 hover:bg-teal-800 border-none text-xl py-3 px-6 shadow-lg' %>
-</div>
+      <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 border-none text-xl py-3 px-6 shadow-lg' %>
+      <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-secondary bg-teal-700 hover:bg-teal-800 border-none text-xl py-3 px-6 shadow-lg' %>
+    </div>
   </main>
 
   <footer class="bg-gray-100 py-4">
