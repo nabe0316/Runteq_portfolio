@@ -1,16 +1,4 @@
 <div class="min-h-screen flex flex-col">
-  <header class="bg-teal-700 text-white p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold">タイトル</h1>
-    <div>
-      <% if user_signed_in? %>
-        <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'btn btn-ghost' %>
-      <% else %>
-        <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-ghost' %>
-        <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-ghost' %>
-      <% end %>
-    </div>
-  </header>
-
   <main class="flex-grow container mx-auto px-4 py-8">
     <h2 class="text-3xl font-bold mb-6">サービス概要</h2>
     <p class="mb-8">サービスの概要を記述。</p>
@@ -23,12 +11,4 @@
       <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-secondary bg-teal-700 hover:bg-teal-800 border-none text-xl py-3 px-6 shadow-lg' %>
     </div>
   </main>
-
-  <footer class="bg-gray-100 py-4">
-    <div class="container mx-auto px-4 flex justify-between">
-      <%= link_to '利用規約', '#', class: 'link' %>
-      <%= link_to 'プライバシーポリシー', '#', class: 'link' %>
-      <%= link_to 'お問い合わせ', '#', class: 'link' %>
-    </div>
-  </footer>
 </div>

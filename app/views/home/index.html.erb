@@ -1,6 +1,6 @@
 <div class="flex h-screen bg-gray-100">
   <!-- サイドバー -->
-  <div class="w-64 bg-white shadow-md">
+  <div class="w-64 bg-white shadow-md overflow-y-auto">
     <div class="p-4">
       <h1 class="text-2xl font-semibold text-gray-800"><%= current_user.name %></h1>
     </div>
@@ -21,7 +21,7 @@
   </div>
 
   <!-- メインコンテンツ -->
-  <div class="flex-1 p-10">
+  <div class="flex-1 p-10 overflow-y-auto">
     <h2 class="text-3xl font-bold mb-6">あなたの感謝の木</h2>
     <!-- ここに木の表示ロジックを追加 -->
     <div class="bg-white p-6 rounded-lg shadow-md">
