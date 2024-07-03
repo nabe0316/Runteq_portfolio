@@ -1,11 +1,12 @@
 <header class="bg-teal-700 text-white p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold">タイトル</h1>
-    <div>
-      <% if user_signed_in? %>
-        <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'btn btn-ghost' %>
-      <% else %>
-        <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-ghost' %>
-        <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-ghost' %>
-      <% end %>
-    </div>
-  </header>
+  <h1 class="text-2xl font-bold">タイトル</h1>
+  <div class="flex items-center">
+    <% if user_signed_in? %>
+      <%= link_to 'ホーム', home_path, class: 'btn btn-ghost mr-2' %>
+      <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'btn btn-ghost', form_class: 'inline-block' %>
+    <% else %>
+      <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-ghost mr-2' %>
+      <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-ghost' %>
+    <% end %>
+  </div>
+</header>
