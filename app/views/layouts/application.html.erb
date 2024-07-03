@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title>PortfolioApp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,7 +10,13 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="flex flex-col h-full">
+    <%= render 'shared/header' %>
+
+    <main class="flex-grow overflow-auto">
+      <%= yield %>
+    </main>
+
+    <%= render 'shared/footer' %>
   </body>
 </html>
