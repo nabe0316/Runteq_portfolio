@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
 
   root 'static_pages#top'
   get 'home', to: 'home#index', as: :home
