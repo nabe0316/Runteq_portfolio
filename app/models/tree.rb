@@ -3,14 +3,14 @@ class Tree < ApplicationRecord
   has_many :message, through: :user
 
   def grow
-    self.svg_date = generate_tree_svg
+    self.svg_data = generate_tree_svg
     save
   end
 
   private
 
   def generate_tree_svg
-    message = user.messages
+    messages = user.messages
     svg = <<~SVG
       <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
         <rect x="190" y="300" width="20" height="100" fill="brown"/>

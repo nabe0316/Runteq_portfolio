@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_09_152208) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_09_155247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_09_152208) do
 
   create_table "trees", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.text "svg_date"
+    t.text "svg_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_trees_on_user_id"
