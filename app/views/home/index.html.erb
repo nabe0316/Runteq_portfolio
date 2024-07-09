@@ -23,12 +23,14 @@
   <!-- メインコンテンツ -->
   <div class="flex-1 p-10 overflow-y-auto">
     <h2 class="text-3xl font-bold mb-6">あなたの感謝の木</h2>
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <% if @tree && @tree.svg_data %>
-        <%= @tree.svg_data.html_safe %>
-      <% else %>
-        <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
-      <% end %>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <% if @tree && @tree.svg_data.present? %>
+          <div class="tree-container" style="width: 400px; height: 400px; margin: auto;">
+            <%= @tree.svg_data.html_safe %>
+          </div>
+        <% else %>
+          <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
+        <% end %>
     </div>
     <p class="mt-4 text-lg">メッセージ数: <%= @messages&.count || 0 %></p>
   </div>
