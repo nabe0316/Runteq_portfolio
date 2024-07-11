@@ -25,8 +25,8 @@
     <h2 class="text-3xl font-bold mb-6">あなたの感謝の木</h2>
       <div class="bg-white p-6 rounded-lg shadow-md">
         <% if @tree && @tree.svg_data.present? %>
-          <div class="tree-container" style="width: 400px; height: 400px; margin: auto;">
-            <%= @tree.svg_data.html_safe %>
+          <div class="tree-container" style="width: 400px; height: 400px; margin: auto; data-controller="tree"">
+            <%= render_tree_with_links(@tree.svg_data, @messages).html_safe %>
           </div>
         <% else %>
           <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
