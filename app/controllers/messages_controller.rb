@@ -1,4 +1,6 @@
 class MessagesController < ApplicationController
+  before_action :set_message, only: [:show, :edit, :update, :destroy]
+
   def new
     @message = current_user.messages.new
   end
@@ -14,10 +16,29 @@ class MessagesController < ApplicationController
   end
 
   def show
-    @message = Message.find(params[:id])
+  end
+
+  def edit
+  end
+
+  def update
+    if @message.update(message_params)
+      redirect_to @message, notice: 'メッセージが更新されました。'
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @message.destroy
+    redirect_to home_path, notice: 'メッセージが削除されました。'
   end
 
   private
+
+  def set_message
+    @message = Message.find(params[:id])
+  end
 
   def message_params
     params.require(:message).permit(:title, :content)
