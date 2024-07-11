@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:show, :edit, :update]
+  before_action :set_message, only: [:show, :edit, :update, :destroy]
 
   def new
     @message = current_user.messages.new
@@ -27,6 +27,11 @@ class MessagesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @message.destroy
+    redirect_to home_path, notice: 'メッセージが削除されました。'
   end
 
   private
