@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   root 'static_pages#top'
   get 'home', to: 'home#index', as: :home
-  resources :messages, only: [:new, :create]
+  resources :messages, only: [:new, :create, :show]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
