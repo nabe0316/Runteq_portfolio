@@ -18,7 +18,7 @@
     
     <div class="flex justify-between">
       <%= link_to "戻る", home_path, class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded text-lg" %>
-      <%= link_to "編集", '#', class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded text-lg" %>
+      <%= link_to "編集", edit_message_path(@message), class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded text-lg" %>
       <%= button_to "削除", '#', method: :delete, data: { confirm: "本当に削除しますか？" }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded text-lg" %>
     </div>
   </div>
