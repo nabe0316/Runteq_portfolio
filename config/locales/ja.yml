@@ -1,0 +1,31 @@
+ja:
+  activerecord:
+    attributes:
+      message:
+        title: "タイトル"
+        content: "内容"
+    errors:
+      models:
+        message:
+          attributes:
+            title:
+              blank: "を入力してください"
+            content:
+              blank: "を入力してください"
+  
+  errors:
+    messages:
+      blank: "を入力してください"
+    template:
+      header:
+        one: "%{model}にエラーが発生しました"
+        other: "%{model}に%{count}個のエラーが発生しました"
+      body: "次の項目を確認してください："
+
+  helpers:
+    select:
+      prompt: "選択してください"
+    submit:
+      create: "登録する"
+      update: "更新する"
+      submit: "保存する"
