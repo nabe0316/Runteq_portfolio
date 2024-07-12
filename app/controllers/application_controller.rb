@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :show_footer?
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
