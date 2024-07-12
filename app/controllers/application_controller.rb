@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     home_path
   end
 
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  end
+
   def show_footer?
     controller_name == 'static_pages' ||
     (controller_name == 'registrations' && action_name == 'new') ||
