@@ -19,3 +19,11 @@ services:
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: GMAIL_USERNAME
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+      - key: RENDER_EXTERNAL_HOSTNAME
+        sync: false
