@@ -58,7 +58,7 @@ class Tree < ApplicationRecord
   end
 
   def generate_leaf(x, y, color, message, scale)
-    leaf_size = 10 * scale
+    leaf_size = 15 * scale
     %Q{
       <g class="leaf-group" data-controller="leaf-hover">
         <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
