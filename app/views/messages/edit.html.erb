@@ -3,8 +3,21 @@
     <h1 class="text-2xl font-bold mb-6 text-center">メッセージの編集</h1>
     
     <%= form_with(model: @message, local: true) do |form| %>
+      <% if @message.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <h2 class="font-bold mb-2">
+            <%= t("errors.template.header", count: @message.errors.count, model: Message.model_name.human) %>
+          </h2>
+          <ul class="list-disc list-inside">
+            <% @message.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
       <div class="mb-4">
-        <%= form.label :title, "メッセージのタイトル", class: "block text-xl font-semibold mb-2" %>
+        <%= form.label :title, "タイトル", class: "block text-xl font-semibold mb-2" %>
         <%= form.text_field :title, class: "w-full p-2 border rounded" %>
       </div>
       
