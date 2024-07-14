@@ -29,3 +29,10 @@ ja:
       create: "登録する"
       update: "更新する"
       submit: "保存する"
+  
+  tree:
+    stages:
+      seedling: "苗木"
+      sapling: "若木"
+      mature: "成木"
+      ancient: "大木"

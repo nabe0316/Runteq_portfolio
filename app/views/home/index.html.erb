@@ -26,8 +26,9 @@
       <div class="bg-white p-6 rounded-lg shadow-md">
         <% if @tree && @tree.svg_data.present? %>
           <div class="tree-container" style="width: 400px; height: 400px; margin: auto; data-controller="tree"">
-            <%= render_tree_with_links(@tree.svg_data, @messages).html_safe %>
+            <%= @tree.svg_data.html_safe %>
           </div>
+          <p class="mt-4 text-lg">現在の成長段階: <%= t("tree.stages.#{@current_stage}") %></p>
         <% else %>
           <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
         <% end %>
