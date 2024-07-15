@@ -28,43 +28,48 @@ class Tree < ApplicationRecord
     stage = current_stage
     stage_data = GROWTH_STAGES[stage]
 
-    svg = %Q{<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">}
+    tree_height = calculate_tree_height(stage_data[:trunk_scale])
+    viewport_height = [400, tree_height + 50].max  # 最小高さを400に設定し、木の高さに50pxの余裕を持たせる
+    y_offset = viewport_height - 400  # 木の底部を元の位置に合わせるためのオフセット
+
+    svg = %Q{<svg width="400" height="#{viewport_height}" viewBox="0 0 400 #{viewport_height}" xmlns="http://www.w3.org/2000/svg">}
     svg += define_gradients
 
     # 影
-    svg += generate_shadow(stage_data[:trunk_scale])
+    svg += generate_shadow(stage_data[:trunk_scale], y_offset)
 
     # 幹
-    trunk = generate_trunk(stage_data[:trunk_scale])
+    trunk = generate_trunk(stage_data[:trunk_scale], viewport_height)
     svg += trunk
 
     # 枝と葉
-    branches = generate_branches(trunk, stage_data[:branch_count], stage_data[:trunk_scale])
-    svg += generate_leaves_and_branches(branches, messages)
+    branches = generate_branches(trunk, stage_data[:branch_count], stage_data[:trunk_scale], viewport_height)
+    leaves_and_branches = generate_leaves_and_branches(branches, messages)
+    svg += leaves_and_branches
 
     svg += "</svg>"
     svg.html_safe
   end
 
-  def generate_shadow(scale)
-    %Q{<ellipse cx="200" cy="390" rx="#{100*scale}" ry="#{10*scale}" fill="rgba(0,0,0,0.3)" />}
+  def generate_shadow(scale, y_offset)
+    %Q{<ellipse cx="200" cy="#{390 + y_offset}" rx="#{100*scale}" ry="#{10*scale}" fill="rgba(0,0,0,0.3)" />}
   end
 
-  def generate_trunk(scale)
+  def generate_trunk(scale, viewport_height)
     trunk_height = 300 * scale
     trunk_width = 30 * scale
-    %Q{<path d="M200,400 C180,#{400-trunk_height*0.5} 220,#{400-trunk_height*0.7} 200,#{400-trunk_height}"
+    %Q{<path d="M200,#{viewport_height} C180,#{viewport_height-trunk_height*0.5} 220,#{viewport_height-trunk_height*0.7} 200,#{viewport_height-trunk_height}"
                stroke="url(#trunkGradient)" stroke-width="#{trunk_width}" fill="none" stroke-linecap="round" />}
   end
 
-  def generate_branches(trunk, count, scale)
+  def generate_branches(trunk, count, scale, viewport_height)
     branches = []
     trunk_height = 300 * scale
     count.times do |i|
       side = i.even? ? 1 : -1
       angle = 30 + rand(40)
       length = (60 + rand(60)) * scale
-      start_y = 400 - trunk_height + (trunk_height * i / count * 0.9)
+      start_y = viewport_height - trunk_height + (trunk_height * i / count * 0.9)
       end_x = 200 + side * length * Math.cos(angle * Math::PI / 180)
       end_y = start_y - length * Math.sin(angle * Math::PI / 180)
       control_x = 200 + side * length * 0.5 * Math.cos(angle * Math::PI / 180)
@@ -75,12 +80,22 @@ class Tree < ApplicationRecord
     branches
   end
 
+  def calculate_tree_height(scale)
+    trunk_height = 300 * scale
+    max_branch_length = 120 * scale  # 最大の枝の長さを推定
+    trunk_height + max_branch_length
+  end
+
   def generate_leaves_and_branches(branches, messages)
     svg = ""
+
+    branches.each do |branch|
+      svg += %Q{<path d="#{branch}" stroke="url(#branchGradient)" stroke-width="10" fill="none" stroke-linecap="round" />}
+    end
+
     messages.each_with_index do |message, index|
       branch = branches[index % branches.length]
       leaf_position = random_point_on_branch(branch)
-      svg += %Q{<path d="#{branch}" stroke="url(#branchGradient)" stroke-width="10" fill="none" stroke-linecap="round" />}
       svg += generate_leaf(leaf_position[:x], leaf_position[:y], message)
     end
     svg
@@ -95,18 +110,16 @@ class Tree < ApplicationRecord
   end
 
   def generate_leaf(x, y, message)
-    leaf_size = 15 + rand(10)
+    leaf_size = 20 + rand(5)  # 葉のサイズを調整（直径）
     rotation = rand(360)
     %Q{
       <g class="leaf-group" data-controller="leaf-hover" transform="rotate(#{rotation}, #{x}, #{y})">
         <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
-          <path d="M#{x},#{y}
-                   C#{x-leaf_size*0.5},#{y-leaf_size*0.8} #{x-leaf_size*0.5},#{y+leaf_size*0.4} #{x},#{y+leaf_size}
-                   C#{x+leaf_size*0.5},#{y+leaf_size*0.4} #{x+leaf_size*0.5},#{y-leaf_size*0.8} #{x},#{y}"
-                fill="url(#leafGradient)" stroke="darkgreen" stroke-width="1" class="leaf">
+          <circle cx="#{x}" cy="#{y}" r="#{leaf_size / 2}"
+                  fill="url(#leafGradient)" stroke="darkgreen" stroke-width="1" class="leaf">
             <animate attributeName="opacity" values="1;0.8;1" dur="3s" repeatCount="indefinite" />
             <title>#{message.title}</title>
-          </path>
+          </circle>
         </a>
         <text x="#{x}" y="#{y}" dy="-15" class="leaf-info" style="display: none; font-size: 8px; fill: #333;">
           <tspan x="#{x}" dy="-1.2em">#{message.title}</tspan>
