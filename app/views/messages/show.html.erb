@@ -4,7 +4,7 @@
     
     <%= form_with(model: @message, local: true) do |form| %>
       <div class="mb-4">
-        <%= form.label :title, "メッセージのタイトル", class: "block text-xl font-semibold mb-2" %>
+        <%= form.label :title, "タイトル", class: "block text-xl font-semibold mb-2" %>
         <%= form.text_field :title, class: "w-full p-2 border rounded" %>
       </div>
       

@@ -1,14 +1,47 @@
-<div class="min-h-screen flex flex-col">
-  <main class="flex-grow container mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold mb-6">サービス概要</h2>
-    <p class="mb-8">サービスの概要を記述。</p>
+<div class="min-h-screen bg-gradient-to-b from-teal-50 to-teal-100 flex flex-col">
+  <main class="flex-grow container mx-auto px-4 py-12 max-w-4xl">
 
-    <h2 class="text-3xl font-bold mb-6">使い方</h2>
-    <p class="mb-8">使い方の説明。</p>
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8 transform hover:scale-105 transition duration-300">
+      <h2 class="text-3xl font-bold mb-4 text-teal-700 border-b-2 border-teal-200 pb-2">サービス概要</h2>
+      <p class="text-xl text-gray-700 leading-relaxed">
+        <span class="font-semibold text-teal-600">あなたの感謝の気持ちが木を育てる。</span><br>
+        日々の感謝がメッセージになり、<span class="italic">葉となり</span>、<span class="underline">木を育てます</span>。
+      </p>
+    </div>
 
-    <div class="flex justify-center space-x-6">
-      <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 border-none text-xl py-3 px-6 shadow-lg' %>
-      <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-secondary bg-teal-700 hover:bg-teal-800 border-none text-xl py-3 px-6 shadow-lg' %>
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8 transform hover:scale-105 transition duration-300">
+      <h2 class="text-3xl font-bold mb-4 text-teal-700 border-b-2 border-teal-200 pb-2">使い方</h2>
+      <ol class="list-decimal list-inside text-xl text-gray-700 leading-relaxed">
+        <li class="mb-3"><span class="font-semibold text-teal-600">登録</span>してログイン</li>
+        <li class="mb-3">感謝の気持ちを<span class="italic">メッセージ</span>で作成</li>
+        <li>あなたの木が<span class="underline">成長する様子</span>を楽しむ</li>
+      </ol>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8 transform hover:scale-105 transition duration-300">
+      <h2 class="text-3xl font-bold mb-4 text-teal-700 border-b-2 border-teal-200 pb-2">こんな人におすすめ</h2>
+      <ul class="list-disc list-inside text-xl text-gray-700 leading-relaxed mb-4">
+        <li class="mb-3"><span class="font-bold text-teal-600">言葉で感謝を伝えることが苦手もしくは恥ずかしい</span>方</li>
+        <li class="mb-3">感謝の気持ちを持っていても<span class="italic">上手に伝えられない</span>方</li>
+        <li class="mb-3"><span class="underline">身近になればなるほど、何故か言えない</span>方</li>
+        <li>日々の感謝の気持ちを<span class="font-semibold text-teal-600">記録したい</span>方</li>
+      </ul>
+      <p class="text-xl text-gray-700 leading-relaxed italic">
+        このアプリが実際に言葉にするきっかけになれれば...
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-12 transform hover:scale-105 transition duration-300">
+      <h2 class="text-3xl font-bold mb-4 text-teal-700 border-b-2 border-teal-200 pb-2">ありがとうの効果</h2>
+      <p class="text-lg text-gray-700 leading-relaxed">
+        <span class="font-semibold text-teal-600">身体的な効能</span>として、免疫力の向上、痛みの軽減、血圧の低下などがあり、<span class="font-semibold text-teal-600">心理的効能</span>として、ポジティブ感情の高まり、楽天性や幸福感の高まりなどが挙げられます。
+        さらに<span class="font-semibold text-teal-600">社会的効能</span>として、他者を助け寛容で慈悲深くなる、孤立感や孤独感の軽減、外向性の向上などの変容が見られます。
+      </p>
+    </div>
+
+    <div class="flex justify-center space-x-6 mt-8">
+      <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 text-white font-bold text-xl py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300' %>
+      <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 text-white font-bold text-xl py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300' %>
     </div>
   </main>
 </div>
