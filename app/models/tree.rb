@@ -2,10 +2,10 @@ class Tree < ApplicationRecord
   belongs_to :user
 
   GROWTH_STAGES = {
-    seedling: { max_messages: 5, trunk_scale: 0.6, branch_count: 2 },
-    sapling: { max_messages: 15, trunk_scale: 0.8, branch_count: 4 },
-    mature: { max_messages: 30, trunk_scale: 1.0, branch_count: 6 },
-    ancient: { max_messages: Float::INFINITY, trunk_scale: 1.2, branch_count: 8 }
+    seedling: { max_messages: 10, trunk_scale: 0.6, branch_count: 3 },
+    sapling: { max_messages: 20, trunk_scale: 0.8, branch_count: 6 },
+    mature: { max_messages: 40, trunk_scale: 1.0, branch_count: 10 },
+    ancient: { max_messages: Float::INFINITY, trunk_scale: 1.2, branch_count: 15 }
   }
 
   def grow
@@ -29,24 +29,15 @@ class Tree < ApplicationRecord
     stage_data = GROWTH_STAGES[stage]
 
     tree_height = calculate_tree_height(stage_data[:trunk_scale])
-    viewport_height = [400, tree_height + 50].max  # 最小高さを400に設定し、木の高さに50pxの余裕を持たせる
-    y_offset = viewport_height - 400  # 木の底部を元の位置に合わせるためのオフセット
+    viewport_height = [400, tree_height + 50].max
+    y_offset = viewport_height - 400
 
     svg = %Q{<svg width="400" height="#{viewport_height}" viewBox="0 0 400 #{viewport_height}" xmlns="http://www.w3.org/2000/svg">}
     svg += define_gradients
-
-    # 影
     svg += generate_shadow(stage_data[:trunk_scale], y_offset)
-
-    # 幹
-    trunk = generate_trunk(stage_data[:trunk_scale], viewport_height)
-    svg += trunk
-
-    # 枝と葉
-    branches = generate_branches(trunk, stage_data[:branch_count], stage_data[:trunk_scale], viewport_height)
-    leaves_and_branches = generate_leaves_and_branches(branches, messages)
-    svg += leaves_and_branches
-
+    svg += generate_trunk(stage_data[:trunk_scale], viewport_height)
+    branches = generate_branches(stage_data[:branch_count], stage_data[:trunk_scale], viewport_height)
+    svg += generate_leaves_and_branches(branches, messages)
     svg += "</svg>"
     svg.html_safe
   end
@@ -62,7 +53,7 @@ class Tree < ApplicationRecord
                stroke="url(#trunkGradient)" stroke-width="#{trunk_width}" fill="none" stroke-linecap="round" />}
   end
 
-  def generate_branches(trunk, count, scale, viewport_height)
+  def generate_branches(count, scale, viewport_height)
     branches = []
     trunk_height = 300 * scale
     count.times do |i|
@@ -80,48 +71,71 @@ class Tree < ApplicationRecord
     branches
   end
 
-  def calculate_tree_height(scale)
-    trunk_height = 300 * scale
-    max_branch_length = 120 * scale  # 最大の枝の長さを推定
-    trunk_height + max_branch_length
-  end
-
   def generate_leaves_and_branches(branches, messages)
     svg = ""
-
     branches.each do |branch|
       svg += %Q{<path d="#{branch}" stroke="url(#branchGradient)" stroke-width="10" fill="none" stroke-linecap="round" />}
     end
 
+    leaves_positions = []
+    max_leaf_size = 15
+    min_distance = max_leaf_size * 2
+
     messages.each_with_index do |message, index|
       branch = branches[index % branches.length]
-      leaf_position = random_point_on_branch(branch)
+      leaf_position = find_available_position(branch, leaves_positions, min_distance)
+      leaves_positions << leaf_position
       svg += generate_leaf(leaf_position[:x], leaf_position[:y], message)
     end
     svg
   end
 
-  def random_point_on_branch(branch)
+  def find_available_position(branch, existing_positions, min_distance)
+    max_attempts = 100
+    attempts = 0
+
+    loop do
+      position = random_point_around_branch(branch)
+      if valid_position?(position, existing_positions, min_distance) || attempts >= max_attempts
+        return position
+      end
+      attempts += 1
+    end
+  end
+
+  def valid_position?(new_position, existing_positions, min_distance)
+    existing_positions.none? do |pos|
+      distance = Math.sqrt((new_position[:x] - pos[:x])**2 + (new_position[:y] - pos[:y])**2)
+      distance < min_distance
+    end
+  end
+
+  def random_point_around_branch(branch)
     start_x, start_y, control_x, control_y, end_x, end_y = branch.scan(/[-\d.]+/).map(&:to_f)
-    t = rand * 0.6 + 0.4  # 0.4から1.0の間のランダムな値
-    x = (1-t)**2 * start_x + 2*(1-t)*t * control_x + t**2 * end_x
-    y = (1-t)**2 * start_y + 2*(1-t)*t * control_y + t**2 * end_y
+    t = rand * 0.6 + 0.2
+    base_x = (1-t)**2 * start_x + 2*(1-t)*t * control_x + t**2 * end_x
+    base_y = (1-t)**2 * start_y + 2*(1-t)*t * control_y + t**2 * end_y
+
+    angle = rand * 2 * Math::PI
+    offset_distance = rand * 30
+    x = base_x + offset_distance * Math.cos(angle)
+    y = base_y + offset_distance * Math.sin(angle)
+
     { x: x, y: y }
   end
 
   def generate_leaf(x, y, message)
-    leaf_size = 20 + rand(5)  # 葉のサイズを調整（直径）
+    leaf_size = 13 + rand(5)
     rotation = rand(360)
     %Q{
       <g class="leaf-group" data-controller="leaf-hover" transform="rotate(#{rotation}, #{x}, #{y})">
         <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
-          <circle cx="#{x}" cy="#{y}" r="#{leaf_size / 2}"
+          <circle cx="#{x}" cy="#{y}" r="#{leaf_size}"
                   fill="url(#leafGradient)" stroke="darkgreen" stroke-width="1" class="leaf">
-            <animate attributeName="opacity" values="1;0.8;1" dur="3s" repeatCount="indefinite" />
             <title>#{message.title}</title>
           </circle>
         </a>
-        <text x="#{x}" y="#{y}" dy="-15" class="leaf-info" style="display: none; font-size: 8px; fill: #333;">
+        <text x="#{x}" y="#{y}" dy="-#{leaf_size + 5}" text-anchor="middle" class="leaf-info" style="display: none; font-size: 8px; fill: #333;">
           <tspan x="#{x}" dy="-1.2em">#{message.title}</tspan>
           <tspan x="#{x}" dy="1.2em">#{message.created_at.strftime('%Y-%m-%d %H:%M')}</tspan>
         </text>
@@ -129,31 +143,29 @@ class Tree < ApplicationRecord
     }
   end
 
+  def calculate_tree_height(scale)
+    trunk_height = 300 * scale
+    max_branch_length = 120 * scale
+    trunk_height + max_branch_length
+  end
+
   def define_gradients
     %Q{
       <defs>
-        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
-        </linearGradient>
-        <linearGradient id="groundGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#A0522D;stop-opacity:1" />
-        </linearGradient>
         <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
           <stop offset="50%" style="stop-color:#A0522D;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
         </linearGradient>
         <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#A0522D;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#CD853F;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#A0522D;stop-opacity:1" />
+          <stop offset="0%" style="stop-color:#A0522D;stop-opacity:0.7" />
+          <stop offset="50%" style="stop-color:#CD853F;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#A0522D;stop-opacity:0.7" />
         </linearGradient>
-        <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <radialGradient id="leafGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
           <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
-        </linearGradient>
+        </radialGradient>
       </defs>
     }
   end
