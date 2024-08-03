@@ -5,7 +5,7 @@
       <h1 class="text-2xl font-semibold text-gray-800"><%= current_user.name %></h1>
     </div>
     <nav class="mt-4">
-      <%= link_to '#', class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
+      <%= link_to profile_path(current_user.profile), class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
         <i class="fas fa-user mr-2"></i> プロフィール
       <% end %>
       <%= link_to new_message_path, class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
