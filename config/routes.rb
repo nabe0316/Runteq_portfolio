@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'static_pages#top'
   get 'home', to: 'home#index', as: :home
   resources :messages, only: [:new, :create, :show, :edit, :update, :destroy]
+  resources :profiles, only: [:show, :edit, :update]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
