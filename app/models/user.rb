@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   has_one :tree
   has_one :profile, dependent: :destroy
+  accepts_nested_attributes_for :profile
+
   has_many :messages
 
   after_create :create_profile
