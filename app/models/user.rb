@@ -6,12 +6,21 @@ class User < ApplicationRecord
 
   validates :name, presence: true, length: { minimum: 2 }, if: :name_required?
 
-  has_one :tree
-  has_many :messages
+  has_one :tree, dependent: :destroy
+  has_one :profile, dependent: :destroy
+  accepts_nested_attributes_for :profile
+
+  has_many :messages, dependent: :destroy
+
+  after_create :create_profile
 
   private
 
   def name_required?
     new_record? || name.present?
+  end
+
+  def create_profile
+    build_profile(username: name.presence || "User#{id}").save!
   end
 end
