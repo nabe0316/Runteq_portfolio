@@ -1,57 +1,50 @@
-<div class="container mx-auto mt-8">
-  <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
-    <h2 class="text-2xl font-bold mb-6"><%= t('.title', resource: resource.model_name.human) %></h2>
+<div class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto py-8">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto">
+      <h2 class="text-2xl font-bold mb-6 text-center">プロフィール編集</h2>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-      <div>
-        <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.email_field :email, autocomplete: "email", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
-      </div>
+        <div class="mb-4">
+          <%= f.label :name, "ユーザー名", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= f.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        </div>
 
-      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-        <div><%= t('.currently_waiting_confirmation_for_email', email: resource.unconfirmed_email) %></div>
-      <% end %>
+        <div class="mb-4">
+          <%= f.label :email, "メールアドレス", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= f.email_field :email, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        </div>
 
-      <div>
-        <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
-        <i>(<%= t('.leave_blank_if_you_don_t_want_to_change_it') %>)</i>
-        <%= f.password_field :password, autocomplete: "new-password", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
-        <% if @minimum_password_length %>
-          <em><%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %></em>
+        <div class="mb-4">
+          <%= f.label :password, "新しいパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          <p class="text-gray-600 text-xs italic mt-1">変更しない場合は空欄のままにしてください</p>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        </div>
+
+        <%= f.fields_for :profile do |profile_fields| %>
+          <div class="mb-4">
+            <%= profile_fields.label :avatar, "プロフィール画像", class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <%= profile_fields.file_field :avatar, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          </div>
         <% end %>
-      </div>
 
-      <div>
-        <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
-      </div>
+        <div class="mb-4">
+          <%= f.label :current_password, "現在のパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          <p class="text-gray-600 text-xs italic mt-1">変更を確認するために現在のパスワードが必要です</p>
+        </div>
 
-      <!-- プロフィール画像の編集フィールド -->
-      <%= f.fields_for :profile do |profile_fields| %>
-        <div>
-          <%= profile_fields.label :avatar, "プロフィール画像", class: "block text-sm font-medium text-gray-700" %>
-          <%= profile_fields.file_field :avatar, class: "mt-1 block w-full" %>
+        <div class="flex items-center justify-between mt-6">
+          <%= link_to "戻る", :back, class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+          <%= f.submit "保存", class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
         </div>
       <% end %>
-
-      <div>
-        <%= f.label :current_password, class: "block text-sm font-medium text-gray-700" %>
-        <i>(<%= t('.we_need_your_current_password_to_confirm_your_changes') %>)</i>
-        <%= f.password_field :current_password, autocomplete: "current-password", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
-      </div>
-
-      <div class="flex items-center justify-between">
-        <%= f.submit t('.update'), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-        <%= link_to t('devise.shared.links.back'), :back, class: "text-gray-600 hover:text-gray-800" %>
-      </div>
-    <% end %>
-
-    <h3 class="text-xl font-bold mt-8 mb-4"><%= t('.cancel_my_account') %></h3>
-
-    <div>
-      <%= button_to t('.cancel_my_account'), registration_path(resource_name), data: { confirm: t('.are_you_sure'), turbo_confirm: t('.are_you_sure') }, method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
     </div>
   </div>
 </div>
