@@ -1,6 +1,11 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :edit, :update, :destroy]
 
+  def index
+    @q = current_user.messages.ransack(params[:q])
+    @messages = @q.result(distinct: true).order(created_at: :desc)
+  end
+
   def new
     @message = current_user.messages.new
   end
@@ -37,7 +42,7 @@ class MessagesController < ApplicationController
   private
 
   def set_message
-    @message = Message.find(params[:id])
+    @message = current_user.messages.find(params[:id])
   end
 
   def message_params
