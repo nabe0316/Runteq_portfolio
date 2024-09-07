@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: %i[google_oauth2]
+         :recoverable, :rememberable, :validatable
+
 
   validates :name, presence: true, length: { minimum: 2 }, if: :name_required?
 

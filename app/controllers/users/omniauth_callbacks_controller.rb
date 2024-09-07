@@ -27,6 +27,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # def after_omniauth_failure_path_for(scope)
   #   super(scope)
   # end
+
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'])
 
