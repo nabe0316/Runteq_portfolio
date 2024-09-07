@@ -42,6 +42,10 @@
     <div class="flex justify-center space-x-6 mt-8">
       <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 text-white font-bold text-xl py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300' %>
       <%= link_to 'ログイン', new_user_session_path, class: 'btn btn-primary bg-teal-500 hover:bg-teal-600 text-white font-bold text-xl py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300' %>
+      <%= button_to user_google_oauth2_omniauth_authorize_path, data: { turbo: false }, class: "btn bg-white hover:bg-gray-100 text-gray-800 font-semibold text-lg py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300 w-64 flex items-center justify-center" do %>
+        <%= image_tag "https://www.google.com/favicon.ico", alt: "Google logo", class: "h-5 w-5 mr-2" %>
+        Googleでログイン
+      <% end %>
     </div>
   </main>
 </div>
