@@ -6,5 +6,7 @@ class HomeController < ApplicationController
       @tree.grow
       @current_stage = @tree.current_stage
     end
+
+    @recent_messages = Message.recent.includes(:user).limit(10)
   end
 end
