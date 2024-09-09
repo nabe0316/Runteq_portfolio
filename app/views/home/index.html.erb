@@ -30,8 +30,10 @@
           <p class="text-sm text-gray-600 mt-1"><%= truncate(message.content, length: 50) %></p>
           <div class="flex justify-between items-center mt-2">
             <span class="text-xs text-gray-500"><%= message.created_at.strftime("%Y-%m-%d %H:%M") %></span>
-            <span class="text-xs text-gray-500"><%= message.user.name %></span>
-          </div>
+            <%= link_to user_profile_path(message.user), class: "text-xs text-blue-500 hover:underline" do %>
+              <%= message.user.name %>
+            <% end %>
+         </div>
         </div>
       <% end %>
     </div>
