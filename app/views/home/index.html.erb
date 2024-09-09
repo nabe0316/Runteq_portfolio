@@ -1,36 +1,53 @@
 <div class="flex h-screen bg-gray-100">
   <!-- サイドバー -->
-  <div class="w-64 bg-white shadow-md overflow-y-auto">
-    <div class="p-4">
-      <h1 class="text-2xl font-semibold text-gray-800"><%= current_user.name %></h1>
+  <div class="w-64 bg-white shadow-md overflow-y-auto flex flex-col">
+    <div class="flex-shrink-0">
+      <div class="p-4">
+        <h1 class="text-2xl font-semibold text-gray-800"><%= current_user.name %></h1>
+      </div>
+      <nav class="mt-4">
+        <%= link_to profile_path(current_user.profile), class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
+          <i class="fas fa-user mr-2"></i> プロフィール
+        <% end %>
+        <%= link_to new_message_path, class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
+          <i class="fas fa-plus-circle mr-2"></i> メッセージの作成
+        <% end %>
+        <%= link_to messages_path, class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
+          <i class="fas fa-search mr-2"></i> メッセージの検索
+        <% end %>
+        <%= link_to '#', class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
+          <i class="fas fa-paint-brush mr-2"></i> 木のカスタマイズ
+        <% end %>
+      </nav>
     </div>
-    <nav class="mt-4">
-      <%= link_to profile_path(current_user.profile), class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
-        <i class="fas fa-user mr-2"></i> プロフィール
+
+    <!-- 新着メッセージ -->
+    <div class="flex-grow overflow-y-auto mt-6">
+      <h2 class="text-lg font-semibold text-gray-800 px-4 mb-2">新着メッセージ</h2>
+      <% @recent_messages.each do |message| %>
+        <div class="bg-white shadow rounded-lg m-2 p-4">
+          <h3 class="font-semibold text-gray-800"><%= message.title %></h3>
+          <p class="text-sm text-gray-600 mt-1"><%= truncate(message.content, length: 50) %></p>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-gray-500"><%= message.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+            <span class="text-xs text-gray-500"><%= message.user.name %></span>
+          </div>
+        </div>
       <% end %>
-      <%= link_to new_message_path, class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
-        <i class="fas fa-plus-circle mr-2"></i> メッセージの作成
-      <% end %>
-      <%= link_to messages_path, class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
-        <i class="fas fa-search mr-2"></i> メッセージの検索
-      <% end %>
-      <%= link_to '#', class: "block py-2 px-4 text-gray-700 hover:bg-gray-200" do %>
-        <i class="fas fa-paint-brush mr-2"></i> 木のカスタマイズ
-      <% end %>
-    </nav>
+    </div>
   </div>
 
   <!-- メインコンテンツ -->
   <div class="flex-1 p-10 overflow-y-auto">
     <h2 class="text-3xl font-bold mb-6">あなたの感謝の木</h2>
-        <% if @tree && @tree.svg_data.present? %>
-          <div class="tree-container" style="width: 400px; height: 400px; margin: auto; data-controller="tree"">
-            <%= @tree.svg_data.html_safe %>
-          </div>
-          <p class="mt-4 text-lg">現在の成長段階: <%= t("tree.stages.#{@current_stage}") %></p>
-        <% else %>
-          <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
-        <% end %>
+    <% if @tree && @tree.svg_data.present? %>
+      <div class="tree-container" style="width: 400px; height: 400px; margin: auto;" data-controller="tree">
+        <%= @tree.svg_data.html_safe %>
+      </div>
+      <p class="mt-4 text-lg">現在の成長段階: <%= t("tree.stages.#{@current_stage}") %></p>
+    <% else %>
+      <p class="text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
+    <% end %>
     <%= link_to '新しいメッセージを作成', new_message_path, class: 'mt-4 inline-block bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded' %>
     <p class="mt-4 text-lg">メッセージ数: <%= @messages&.count || 0 %></p>
   </div>
