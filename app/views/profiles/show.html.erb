@@ -7,8 +7,10 @@
         <p class="mb-2 text-gray-600">ユーザー名</p>
         <p class="font-semibold mb-4"><%= @profile.username %></p>
         <div class="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4"></div>
-        <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
-        <%= link_to '木のカスタマイズ', '#', class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
+        <% if current_user == @profile.user %>
+          <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
+          <%= link_to '木のカスタマイズ', '#', class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
+        <% end %>
       </div>
     </aside>
 
@@ -22,11 +24,13 @@
           </div>
           <p class="mt-4 text-center text-gray-600">現在の成長段階: <%= t("tree.stages.#{@profile.user.tree.current_stage}") %></p>
         <% else %>
-          <p class="text-center text-gray-600">まだメッセージがありません。新しいメッセージを作成して、木を成長させましょう。</p>
+          <p class="text-center text-gray-600">まだメッセージがありません。</p>
         <% end %>
-        <div class="text-center mt-6">
-          <%= link_to '新しいメッセージを作成', new_message_path, class: 'inline-block bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition duration-300' %>
-        </div>
+        <% if current_user == @profile.user %>
+          <div class="text-center mt-6">
+            <%= link_to '新しいメッセージを作成', new_message_path, class: 'inline-block bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition duration-300' %>
+          </div>
+        <% end %>
         <p class="mt-4 text-center text-gray-600">メッセージ数: <%= @profile.user.messages.count %></p>
       </div>
     </main>

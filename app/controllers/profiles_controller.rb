@@ -1,8 +1,11 @@
 class ProfilesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_profile
+  before_action :authenticate_user!, except: [:show]
+  before_action :set_profile, only: [:edit, :update]
+  before_action :set_user_profile, only: [:show]
 
   def show
+    @tree = @user.tree
+    @messages_count = @user.messages.count
   end
 
   def edit
@@ -20,6 +23,11 @@ class ProfilesController < ApplicationController
 
   def set_profile
     @profile = current_user.profile
+  end
+
+  def set_user_profile
+    @user = User.find(params[:id])
+    @profile = @user.profile
   end
 
   def profile_params
