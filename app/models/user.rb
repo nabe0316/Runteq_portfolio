@@ -12,6 +12,8 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile
 
   has_many :messages, dependent: :destroy
+  has_many :likes
+  has_many :liked_messages, through: :likes, source: :message
 
   after_create :create_profile
 

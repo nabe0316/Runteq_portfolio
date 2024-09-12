@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'likes/create'
+  get 'likes/destroy'
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: 'users/omniauth_callbacks'
@@ -6,7 +8,14 @@ Rails.application.routes.draw do
 
   root 'static_pages#top'
   get 'home', to: 'home#index', as: :home
-  resources :messages
+
+  resources :messages do
+    member do
+      post 'like'
+      delete 'unlike'
+    end
+  end
+
   resources :profiles, only: [:show, :edit, :update]
   get 'users/:id/profile', to: 'profiles#show', as: :user_profile
 
