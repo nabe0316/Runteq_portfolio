@@ -33,7 +33,15 @@
             <%= link_to user_profile_path(message.user), class: "text-xs text-blue-500 hover:underline" do %>
               <%= message.user.name %>
             <% end %>
-         </div>
+          </div>
+          <div class="mt-2">
+            <% if message.liked_by?(current_user) %>
+              <%= button_to 'いいね解除', message_like_path(message), method: :delete, class: 'text-xs bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded' %>
+            <% else %>
+              <%= button_to 'いいね', message_like_path(message), method: :post, class: 'text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded' %>
+            <% end %>
+            <span class="text-xs text-gray-500 ml-2"><%= message.likes.count %> いいね</span>
+          </div>
         </div>
       <% end %>
     </div>

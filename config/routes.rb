@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  get 'likes/create'
-  get 'likes/destroy'
+
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: 'users/omniauth_callbacks'
@@ -10,10 +9,7 @@ Rails.application.routes.draw do
   get 'home', to: 'home#index', as: :home
 
   resources :messages do
-    member do
-      post 'like'
-      delete 'unlike'
-    end
+    resource :like, only: [:create, :destroy]
   end
 
   resources :profiles, only: [:show, :edit, :update]
