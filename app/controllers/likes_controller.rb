@@ -5,6 +5,7 @@ class LikesController < ApplicationController
   def create
     @like = @message.likes.build(user: current_user)
     if @like.save
+      create_notification(@message, @like)
       redirect_back(fallback_location: root_path, notice: 'いいねしました')
     else
       redirect_back(fallback_location: root_path, alert: 'いいねできませんでした')
@@ -24,5 +25,15 @@ class LikesController < ApplicationController
 
   def set_message
     @message = Message.find(params[:message_id])
+  end
+
+  def create_notification(message, like)
+    return if message.user == current_user
+    Notification.create(
+      recipient: message.user,
+      actor: current_user,
+      action: 'liked',
+      notifiable: like
+      )
   end
 end
