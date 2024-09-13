@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :likes
   has_many :liked_messages, through: :likes, source: :message
+  has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
 
   after_create :create_profile
 
