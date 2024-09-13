@@ -3,6 +3,14 @@
   <div class="flex items-center">
     <% if user_signed_in? %>
       <%= link_to 'ホーム', home_path, class: 'btn btn-ghost mr-2' %>
+      <%= link_to notifications_path, class: 'btn btn-ghost mr-2 relative' do %>
+        通知
+        <% if current_user.notifications.unread.exists? %>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <%= current_user.notifications.unread.count %>
+          </span>
+        <% end %>
+      <% end %>
       <%= button_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'btn btn-ghost', form_class: 'inline-block' %>
     <% else %>
       <%= link_to '新規登録', new_user_registration_path, class: 'btn btn-ghost mr-2' %>
