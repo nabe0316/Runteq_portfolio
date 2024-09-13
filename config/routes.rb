@@ -12,6 +12,12 @@ Rails.application.routes.draw do
     resource :like, only: [:create, :destroy]
   end
 
+  resources :notifications, only: [:index] do
+    collection do
+      post :mark_as_read
+    end
+  end
+
   resources :profiles, only: [:show, :edit, :update]
   get 'users/:id/profile', to: 'profiles#show', as: :user_profile
 
