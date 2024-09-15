@@ -76,7 +76,7 @@ Rails.application.configure do
     authentication:       'plain',
     enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: ENV['RENDER_EXTERNAL_HOSTNAME'], protocol: 'https' }
+  config.action_mailer.default_url_options = { host: 'kanshanoki.com', protocol: 'https' }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 
@@ -108,4 +108,8 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.time_zone = 'Tokyo'
+
+  # 新しいドメインをホスト名の許可リストに追加
+  config.hosts << "kanshanoki.com"
+  config.hosts << "www.kanshanoki.com"
 end
