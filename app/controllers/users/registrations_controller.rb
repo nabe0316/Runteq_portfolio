@@ -42,12 +42,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
   end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [profile_attributes: [:id, :avatar]])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, profile_attributes: [:id, :avatar, :username]])
   end
 
   # The path used after sign up.
@@ -61,9 +61,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   def update_resource(resource, params)
-    # パスワードが変更された場合は更新する
-    return super if params["password"]&.present?
-    # パスワードが変更されていない場合は、現在のパスワードを使用
-    resource.update_without_password(params.except("current_password"))
+    if params["password"]&.present?
+      super
+    else
+      resource.update_without_password(params.except("current_password"))
+    end
   end
+
+  def after_update_path_for(resource)
+    profile_path(resource.profile)
+  end
+
 end

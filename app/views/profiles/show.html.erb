@@ -6,9 +6,13 @@
       <div class="mb-4 text-center">
         <p class="mb-2 text-gray-600">ユーザー名</p>
         <p class="font-semibold mb-4"><%= @profile.username %></p>
-        <div class="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4"></div>
+        <div class="w-32 h-32 mx-auto mb-4">
+          <% if @profile.avatar.attached? %>
+            <%= image_tag @profile.avatar_url, class: "rounded-full w-full h-full object-cover" %>
+          <% end %>
+        </div>
         <% if current_user == @profile.user %>
-          <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
+         <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
           <%= link_to '木のカスタマイズ', '#', class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
         <% end %>
       </div>

@@ -29,8 +29,16 @@
 
         <%= f.fields_for :profile do |profile_fields| %>
           <div class="mb-4">
+            <%= profile_fields.label :username, "ユーザー名", class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <%= profile_fields.text_field :username, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          </div>
+
+          <div class="mb-4">
             <%= profile_fields.label :avatar, "プロフィール画像", class: "block text-gray-700 text-sm font-bold mb-2" %>
             <%= profile_fields.file_field :avatar, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+            <% if current_user.profile.avatar.attached? %>
+              <%= image_tag current_user.profile.avatar, class: "mt-2 rounded-full", style: "width: 100px; height: 100px; object-fit: cover;" %>
+            <% end %>
           </div>
         <% end %>
 

@@ -16,7 +16,13 @@ class User < ApplicationRecord
   has_many :liked_messages, through: :likes, source: :message
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
 
+  has_one_attached :avatar
+
   after_create :create_profile
+
+  def avatar_url
+    profile.avatar.attached? ? profile.avatar : 'default_avatar.png'
+  end
 
   private
 

@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   resources :profiles, only: [:show, :edit, :update]
   get 'users/:id/profile', to: 'profiles#show', as: :user_profile
 
+  resolve('ActiveStorage::Blob') { |blob| route_for(:rails_service_blob, blob) }
+  resolve('ActiveStorage::Attachment') { |attachment| route_for(:rails_service_blob, attachment.blob) }
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
