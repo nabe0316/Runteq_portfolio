@@ -8,7 +8,9 @@
         <p class="font-semibold mb-4"><%= @profile.username %></p>
         <div class="w-32 h-32 mx-auto mb-4">
           <% if @profile.avatar.attached? %>
-            <%= image_tag @profile.avatar_url, class: "rounded-full w-full h-full object-cover" %>
+            <%= cl_image_tag @profile.avatar.key, class: "rounded-full w-full h-full object-cover", width: 128, height: 128, crop: :fill %>
+          <% else %>
+            <%= image_tag 'default_avatar.png', class: "rounded-full w-full h-full object-cover" %>
           <% end %>
         </div>
         <% if current_user == @profile.user %>

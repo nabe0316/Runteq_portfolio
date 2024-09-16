@@ -8,15 +8,7 @@ class Profile < ApplicationRecord
 
   def avatar_url
     if avatar.attached?
-      if avatar.content_type == "image/svg+xml"
-        avatar.url
-      else
-        begin
-          avatar.variant(resize_to_limit: [128, 128]).processed.url
-        rescue ActiveStorage::InvariableError
-          avatar.url
-        end
-      end
+      Cloudinary::Utils.cloudinary_url(avatar.key, width: 128, height: 128, crop: :fill)
     else
       ActionController::Base.helpers.asset_path('default_avatar.png')
     end

@@ -47,7 +47,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, profile_attributes: [:id, :avatar, :username]])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, profile_attributes: [:id, :username, :avatar]])
   end
 
   # The path used after sign up.
@@ -61,10 +61,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   def update_resource(resource, params)
-    if params["password"]&.present?
-      super
+    if params[:password].blank? && params[:password_confirmation].blank?
+      params.delete(:current_password)
+      resource.update_without_password(params)
     else
-      resource.update_without_password(params.except("current_password"))
+      resource.update_with_password(params)
     end
   end
 
