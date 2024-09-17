@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   helper_method :show_footer?
   add_flash_types :info, :error, :warning
   before_action :configure_permitted_parameters, if: :devise_controller?
