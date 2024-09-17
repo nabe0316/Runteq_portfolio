@@ -12,8 +12,9 @@ class ProfilesController < ApplicationController
   end
 
   def update
+    @profile = current_user.profile
     if @profile.update(profile_params)
-      redirect_to profile_path(@profile), notice: 'プロフィールが更新されました。'
+      redirect_to @profile, notice: 'プロフィールが更新されました。'
     else
       render :edit
     end
@@ -31,6 +32,10 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:username)
+    params.require(:profile).permit(:avatar)
+  end
+
+  def user_params
+    params.require(:user).permit(:avatar)
   end
 end

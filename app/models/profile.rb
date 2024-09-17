@@ -6,6 +6,14 @@ class Profile < ApplicationRecord
 
   before_validation :set_default_username, if: -> { username.blank? }
 
+  def avatar_url
+    if avatar.attached?
+      Cloudinary::Utils.cloudinary_url(avatar.key, width: 128, height: 128, crop: :fill)
+    else
+      ActionController::Base.helpers.asset_path('default_avatar.png')
+    end
+  end
+
   private
 
   def set_default_username
