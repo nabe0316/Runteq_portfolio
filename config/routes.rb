@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   resources :profiles, only: [:show, :edit, :update]
 
   get 'users/:id/profile', to: 'profiles#show', as: :user_profile
+  get '/terms', to: 'pages#terms'
+  get '/privacy', to: 'pages#privacy'
+  get '/contact', to: 'pages#contact'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
