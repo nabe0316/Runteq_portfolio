@@ -1,6 +1,6 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold mb-4">お問い合わせ</h1>
-  <%= form_with(url: contact_path, local: true, class: "max-w-lg") do |f| %>
+  <%= form_with(url: submit_contact_path, local: true, class: "max-w-lg") do |f| %>
     <div class="mb-4">
       <%= f.label :name, '名前', class: "block text-gray-700 text-sm font-bold mb-2" %>
       <%= f.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
