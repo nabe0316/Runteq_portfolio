@@ -10,6 +10,9 @@ Rails.application.routes.draw do
 
   resources :messages do
     resource :like, only: [:create, :destroy]
+    collection do
+      get :autocomplete
+    end
   end
 
   resources :notifications, only: [:index] do

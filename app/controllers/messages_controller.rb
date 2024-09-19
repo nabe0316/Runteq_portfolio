@@ -39,6 +39,12 @@ class MessagesController < ApplicationController
     redirect_to home_path, notice: 'メッセージが削除されました。'
   end
 
+  def autocomplete
+    @q = current_user.messages.ransack(title_or_content_cont: params[:q])
+    @messages = @q.result(distinct: true).limit(10)
+    render layout: false
+  end
+
   private
 
   def set_message

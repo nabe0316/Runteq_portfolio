@@ -1,12 +1,20 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-8 text-center">メッセージを検索する</h1>
 
-  <%= search_form_for @q, url: messages_path, method: :get, class: "mb-8" do |f| %>
-    <div class="mb-4">
-      <%= f.search_field :title_or_content_cont, placeholder: "タイトルまたは内容で検索", class: "w-full p-2 border rounded-lg bg-gray-100" %>
+  <%= search_form_for @q, url: messages_path, method: :get, class: "mb-8", data: { controller: "autocomplete", autocomplete_url_value: autocomplete_messages_path } do |f| %>
+    <div class="mb-4 relative">
+      <%= f.search_field :title_or_content_cont, 
+        placeholder: "タイトルまたは内容で検索", 
+        class: "w-full p-2 border rounded-lg bg-gray-100",
+        data: {
+          autocomplete_target: "input",
+          action: "input->autocomplete#search"
+        }
+      %>
+       <div data-autocomplete-target="results" class="absolute w-full bg-white border rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto"></div>
     </div>
     <div class="text-center">
-     <%= f.submit "検索", class: "bg-teal-600 text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition duration-300" %>
+      <%= f.submit "検索", class: "bg-teal-600 text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition duration-300" %>
     </div>
   <% end %>
 
