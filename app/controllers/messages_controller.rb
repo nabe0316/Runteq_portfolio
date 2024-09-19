@@ -40,7 +40,7 @@ class MessagesController < ApplicationController
   end
 
   def autocomplete
-    @q = Message.ransack(content_cont: params[:q])
+    @q = current_user.messages.ransack(title_or_content_cont: params[:q])
     @messages = @q.result(distinct: true).limit(10)
     render layout: false
   end

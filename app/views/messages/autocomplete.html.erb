@@ -1,0 +1,6 @@
+<% @messages.each do |message| %>
+  <div class="p-2 hover:bg-gray-100 cursor-pointer" role="option" data-autocomplete-value="<%= message.title %>">
+    <strong><%= message.title %></strong>
+    <p class="text-sm text-gray-600"><%= truncate(message.content, length: 50) %></p>
+  </div>
+<% end %>

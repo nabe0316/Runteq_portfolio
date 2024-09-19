@@ -5,7 +5,7 @@ const application = Application.start()
 application.register('autocomplete', Autocomplete)
 
 // Configure Stimulus development experience
-application.debug = false
+application.debug = true
 window.Stimulus   = application
 
 export { application }
