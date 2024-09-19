@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     resource :like, only: [:create, :destroy]
   end
 
+  get 'messages/autocomplete', to: 'messages#autocomplete'
+
   resources :notifications, only: [:index] do
     collection do
       post :mark_as_read
