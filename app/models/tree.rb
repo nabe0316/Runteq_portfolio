@@ -8,6 +8,20 @@ class Tree < ApplicationRecord
     ancient: { max_messages: Float::INFINITY, trunk_scale: 1.2, branch_count: 15 }
   }
 
+  LEAF_COLORS = {
+    green: '#228B22',
+    pink: '#FFC0CB',
+    orange: '#FFA500'
+  }
+
+  LEAF_SHAPES = %w[circle heart triangle]
+
+  attribute :leaf_color, :string, default: 'green'
+  attribute :leaf_shape, :string, default: 'circle'
+
+  validates :leaf_color, inclusion: { in: LEAF_COLORS.keys.map(&:to_s) }
+  validates :leaf_shape, inclusion: { in: LEAF_SHAPES }
+
   def grow
     self.svg_data = generate_tree_svg
     save
@@ -19,6 +33,58 @@ class Tree < ApplicationRecord
       return stage if message_count <= data[:max_messages]
     end
     :ancient
+  end
+
+  def generate_leaf(x, y, message)
+    leaf_size = 13 + rand(5)
+    rotation = rand(360)
+    leaf_color = LEAF_COLORS[(self.leaf_color || 'green').to_sym]
+
+    leaf_path = case leaf_shape
+    when 'circle'
+      "M #{x},#{y} m -#{leaf_size},0 a #{leaf_size},#{leaf_size} 0 1,0 #{leaf_size*2},0 a #{leaf_size},#{leaf_size} 0 1,0 -#{leaf_size*2},0"
+    when 'heart'
+      "M #{x},#{y} l #{leaf_size/2},#{leaf_size/2} l #{leaf_size/2},-#{leaf_size/2} z"
+    when 'triangle'
+      "M #{x},#{y} l #{leaf_size},0 l -#{leaf_size/2},#{leaf_size} z"
+    end
+
+    %Q{
+      <g class="leaf-group" data-controller="leaf-hover" transform="rotate(#{rotation}, #{x}, #{y})">
+        <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
+          <path d="#{leaf_path}"
+                fill="#{leaf_color}" stroke="#{darken_color(leaf_color, 20)}" stroke-width="1" class="leaf">
+            <title>#{message.title}</title>
+          </path>
+        </a>
+        <text x="#{x}" y="#{y}" dy="-#{leaf_size + 5}" text-anchor="middle" class="leaf-info" style="display: none; font-size: 8px; fill: #333;">
+          <tspan x="#{x}" dy="-1.2em">#{message.title}</tspan>
+          <tspan x="#{x}" dy="1.2em">#{message.created_at.strftime('%Y-%m-%d %H:%M')}</tspan>
+        </text>
+      </g>
+    }
+  end
+
+  def define_gradients
+    leaf_color = LEAF_COLORS[(self.leaf_color || 'green').to_sym]
+    %Q{
+      <defs>
+        <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#A0522D;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#A0522D;stop-opacity:0.7" />
+          <stop offset="50%" style="stop-color:#CD853F;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#A0522D;stop-opacity:0.7" />
+        </linearGradient>
+        <radialGradient id="leafGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" style="stop-color:#{lighten_color(leaf_color, 20)};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#{leaf_color};stop-opacity:1" />
+        </radialGradient>
+      </defs>
+    }
   end
 
   private
@@ -124,49 +190,21 @@ class Tree < ApplicationRecord
     { x: x, y: y }
   end
 
-  def generate_leaf(x, y, message)
-    leaf_size = 13 + rand(5)
-    rotation = rand(360)
-    %Q{
-      <g class="leaf-group" data-controller="leaf-hover" transform="rotate(#{rotation}, #{x}, #{y})">
-        <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
-          <circle cx="#{x}" cy="#{y}" r="#{leaf_size}"
-                  fill="url(#leafGradient)" stroke="darkgreen" stroke-width="1" class="leaf">
-            <title>#{message.title}</title>
-          </circle>
-        </a>
-        <text x="#{x}" y="#{y}" dy="-#{leaf_size + 5}" text-anchor="middle" class="leaf-info" style="display: none; font-size: 8px; fill: #333;">
-          <tspan x="#{x}" dy="-1.2em">#{message.title}</tspan>
-          <tspan x="#{x}" dy="1.2em">#{message.created_at.strftime('%Y-%m-%d %H:%M')}</tspan>
-        </text>
-      </g>
-    }
-  end
-
   def calculate_tree_height(scale)
     trunk_height = 300 * scale
     max_branch_length = 120 * scale
     trunk_height + max_branch_length
   end
 
-  def define_gradients
-    %Q{
-      <defs>
-        <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#A0522D;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
-        </linearGradient>
-        <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#A0522D;stop-opacity:0.7" />
-          <stop offset="50%" style="stop-color:#CD853F;stop-opacity:0.8" />
-          <stop offset="100%" style="stop-color:#A0522D;stop-opacity:0.7" />
-        </linearGradient>
-        <radialGradient id="leafGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
-        </radialGradient>
-      </defs>
-    }
+  def lighten_color(color_hex, amount)
+    hex_to_rgb(color_hex).map { |c| [(c + amount).clamp(0, 255)].pack('C').unpack('H2').first }.join
+  end
+
+  def darken_color(color_hex, amount)
+    hex_to_rgb(color_hex).map { |c| [(c - amount).clamp(0, 255)].pack('C').unpack('H2').first }.join
+  end
+
+  def hex_to_rgb(color_hex)
+    color_hex.gsub('#','').scan(/../).map { |color| color.hex }
   end
 end

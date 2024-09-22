@@ -1,0 +1,17 @@
+<h1>木のカスタマイズ</h1>
+
+<%= form_with(model: @tree, local: true) do |form| %>
+  <div>
+    <%= form.label :leaf_color, "葉の色" %>
+    <%= form.select :leaf_color, Tree::LEAF_COLORS.keys.map { |color| [color.to_s.capitalize, color] } %>
+  </div>
+
+  <div>
+    <%= form.label :leaf_shape, "葉の形" %>
+    <%= form.select :leaf_shape, Tree::LEAF_SHAPES.map { |shape| [shape.capitalize, shape] } %>
+  </div>
+
+  <%= form.submit "保存" %>
+<% end %>
+
+<%= link_to "戻る", root_path %>
