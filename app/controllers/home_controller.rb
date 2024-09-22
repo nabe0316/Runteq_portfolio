@@ -5,7 +5,6 @@ class HomeController < ApplicationController
     if user_signed_in?
       @tree = current_user.tree || current_user.create_tree!
       @messages = current_user.messages
-      @tree.grow
       @current_stage = @tree.current_stage
     end
 

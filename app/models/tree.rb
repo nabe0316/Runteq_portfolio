@@ -35,25 +35,27 @@ class Tree < ApplicationRecord
     :ancient
   end
 
+  private
+
   def generate_leaf(x, y, message)
     leaf_size = 13 + rand(5)
     rotation = rand(360)
-    leaf_color = LEAF_COLORS[(self.leaf_color || 'green').to_sym]
+    current_leaf_color = LEAF_COLORS[leaf_color.to_sym] || LEAF_COLORS[:green]
 
     leaf_path = case leaf_shape
-    when 'circle'
-      "M #{x},#{y} m -#{leaf_size},0 a #{leaf_size},#{leaf_size} 0 1,0 #{leaf_size*2},0 a #{leaf_size},#{leaf_size} 0 1,0 -#{leaf_size*2},0"
     when 'heart'
       "M #{x},#{y} l #{leaf_size/2},#{leaf_size/2} l #{leaf_size/2},-#{leaf_size/2} z"
     when 'triangle'
       "M #{x},#{y} l #{leaf_size},0 l -#{leaf_size/2},#{leaf_size} z"
+    else # circle
+      "M #{x},#{y} m -#{leaf_size},0 a #{leaf_size},#{leaf_size} 0 1,0 #{leaf_size*2},0 a #{leaf_size},#{leaf_size} 0 1,0 -#{leaf_size*2},0"
     end
 
     %Q{
       <g class="leaf-group" data-controller="leaf-hover" transform="rotate(#{rotation}, #{x}, #{y})">
         <a href="#{Rails.application.routes.url_helpers.message_path(message)}" class="leaf-link" data-message-id="#{message.id}">
           <path d="#{leaf_path}"
-                fill="#{leaf_color}" stroke="#{darken_color(leaf_color, 20)}" stroke-width="1" class="leaf">
+                fill="#{current_leaf_color}" stroke="#{darken_color(current_leaf_color, 20)}" stroke-width="1" class="leaf">
             <title>#{message.title}</title>
           </path>
         </a>
@@ -66,7 +68,7 @@ class Tree < ApplicationRecord
   end
 
   def define_gradients
-    leaf_color = LEAF_COLORS[(self.leaf_color || 'green').to_sym]
+    current_leaf_color = LEAF_COLORS[leaf_color.to_sym] || LEAF_COLORS[:green]
     %Q{
       <defs>
         <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -80,14 +82,12 @@ class Tree < ApplicationRecord
           <stop offset="100%" style="stop-color:#A0522D;stop-opacity:0.7" />
         </linearGradient>
         <radialGradient id="leafGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" style="stop-color:#{lighten_color(leaf_color, 20)};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#{leaf_color};stop-opacity:1" />
+          <stop offset="0%" style="stop-color:#{lighten_color(current_leaf_color, 20)};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#{current_leaf_color};stop-opacity:1" />
         </radialGradient>
       </defs>
     }
   end
-
-  private
 
   def generate_tree_svg
     messages = user.messages
