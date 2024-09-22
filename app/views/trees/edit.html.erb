@@ -1,12 +1,41 @@
-<h1>木のカスタマイズ</h1>
+<div class="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-3xl font-bold mb-6 text-center text-teal-700">木のカスタマイズ</h2>
 
-<%= form_with(model: @tree, local: true) do |form| %>
-  <div>
-    <%= form.label :leaf_color, "葉の色" %>
-    <%= form.select :leaf_color, Tree::LEAF_COLORS.keys.map { |color| [color.to_s.capitalize, color] } %>
+      <%= form_with(model: @tree, local: true, class: "space-y-6") do |form| %>
+        <div>
+          <%= form.label :leaf_color, "葉の色", class: "block text-lg font-medium text-gray-700 mb-2" %>
+          <div class="mt-1 flex justify-center space-x-6">
+            <% Tree::LEAF_COLORS.each do |color_name, color_value| %>
+              <label class="inline-flex flex-col items-center">
+                <%= form.radio_button :leaf_color, color_name, class: "hidden peer", data: { action: "change->tree-preview#updateColor" } %>
+                <span class="w-16 h-16 rounded-full border-4 border-gray-300 peer-checked:border-teal-500 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-110" style="background-color: <%= color_value %>;">
+                </span>
+                <span class="mt-2 text-sm font-medium text-gray-700"><%= color_name.to_s.humanize %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="flex justify-between mt-12">
+          <%= link_to root_path, class: "flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition duration-300 text-lg font-semibold" do %>
+            戻る
+          <% end %>
+          <%= form.button type: "submit", class: "flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition duration-300 text-lg font-semibold" do %>
+            保存
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
-
-  <%= form.submit "保存" %>
-<% end %>
-
-<%= link_to "戻る", root_path %>
+  
+  <div class="mt-8 max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-6">
+      <h3 class="text-xl font-semibold mb-4 text-teal-700">プレビュー</h3>
+      <div id="tree-preview" class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center" data-controller="tree-preview">
+        <%= @tree.svg_data.html_safe %>
+      </div>
+    </div>
+  </div>
+</div>
