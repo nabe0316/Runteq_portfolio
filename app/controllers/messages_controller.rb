@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
   before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def index
-    @q = current_user.messages.ransack(params[:q])
+    @q = Message.ransack(params[:q])
     @messages = @q.result(distinct: true).order(created_at: :desc).page(params[:page])
   end
 
@@ -42,7 +42,7 @@ class MessagesController < ApplicationController
   end
 
   def autocomplete
-    @q = current_user.messages.ransack(title_or_content_cont: params[:q])
+    @q = Message.ransack(title_or_content_cont: params[:q])
     @messages = @q.result(distinct: true).limit(10)
     render layout: false
   end
@@ -50,17 +50,17 @@ class MessagesController < ApplicationController
   private
 
   def set_message
-    @message = current_user.messages.find_by(id: params[:id])
+    @message = Message.find_by(id: params[:id])
     unless @message
-      flash[:alert] = "メッセージが見つかりません。"
+      flash[:alert] = "このメッセージは存在しません。"
       redirect_to home_path
     end
   end
 
   def authorize_user
     unless @message.user == current_user
-      flash[:alert] = "このメッセージにアクセスする権限がありません。"
-      redirect_to root_path
+      flash[:alert] = "このメッセージを編集する権限がありません。"
+      redirect_to @message
     end
   end
 
