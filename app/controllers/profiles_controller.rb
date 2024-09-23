@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
-  before_action :set_profile, only: [:edit, :update]
-  before_action :set_user_profile, only: [:show]
+  before_action :authenticate_user!
+  before_action :set_profile, only: [:show, :edit, :update]
+  before_action :set_user_profile, only: [:show, :edit, :update]
 
   def show
     @tree = @user.tree
@@ -37,5 +37,12 @@ class ProfilesController < ApplicationController
 
   def user_params
     params.require(:user).permit(:avatar)
+  end
+
+  def authorize_user
+    unless @profile.user == current_user
+      flash[:alert] = "アクセス権限がありません。"
+      redirect_to root_path
+    end
   end
 end
