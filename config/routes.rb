@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   end
 
   resources :profiles, only: [:show, :edit, :update]
+  resource :tree, only: [:edit, :update]
 
   get 'users/:id/profile', to: 'profiles#show', as: :user_profile
   get '/terms', to: 'pages#terms'
