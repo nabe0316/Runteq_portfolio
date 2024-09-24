@@ -28,7 +28,6 @@
           <div class="tree-container mx-auto" style="width: 400px; height: 400px;" data-controller="tree">
             <%= @profile.user.tree.svg_data.html_safe %>
           </div>
-          <p class="mt-4 text-center text-gray-600">現在の成長段階: <%= t("tree.stages.#{@profile.user.tree.current_stage}") %></p>
         <% else %>
           <p class="text-center text-gray-600">まだメッセージがありません。</p>
         <% end %>

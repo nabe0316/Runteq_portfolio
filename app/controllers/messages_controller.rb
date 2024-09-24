@@ -52,7 +52,7 @@ class MessagesController < ApplicationController
   def set_message
     @message = current_user.messages.find_by(id: params[:id])
     unless @message
-      flash[:alert] = "このメッセージは存在しません。"
+      flash[:alert] = "このメッセージは閲覧できません。"
       redirect_to home_path
     end
   end
