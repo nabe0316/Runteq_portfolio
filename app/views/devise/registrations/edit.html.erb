@@ -1,56 +1,67 @@
-<div class="bg-gray-100 min-h-screen">
-  <div class="container mx-auto py-8">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto">
-      <h2 class="text-2xl font-bold mb-6 text-center">プロフィール編集</h2>
+<div class="bg-gray-100 min-h-screen py-8">
+  <div class="container mx-auto px-4">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold mb-6 text-center text-teal-600">プロフィール編集</h2>
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
-        <div class="mb-4">
-          <%= f.label :name, "ユーザー名", class: "block text-gray-700 text-sm font-bold mb-2" %>
-          <%= f.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 space-y-4">
+            <div>
+              <%= f.label :name, "ユーザー名", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.text_field :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-teal-300" %>
+            </div>
 
-        <div class="mb-4">
-          <%= f.label :email, "メールアドレス", class: "block text-gray-700 text-sm font-bold mb-2" %>
-          <%= f.email_field :email, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-        </div>
+            <div>
+              <%= f.label :email, "メールアドレス", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.email_field :email, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-teal-300" %>
+            </div>
 
-        <div class="mb-4">
-          <%= f.label :password, "新しいパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
-          <%= f.password_field :password, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-          <p class="text-gray-600 text-xs italic mt-1">変更しない場合は空欄のままにしてください</p>
-        </div>
+            <div>
+              <%= f.label :password, "新しいパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.password_field :password, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-teal-300" %>
+              <p class="text-gray-600 text-xs italic mt-1">変更しない場合は空欄のままにしてください</p>
+            </div>
 
-        <div class="mb-4">
-          <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "block text-gray-700 text-sm font-bold mb-2" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-        </div>
+            <div>
+              <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-teal-300" %>
+            </div>
 
-        <%= f.fields_for :profile do |profile_fields| %>
-          <div class="mb-4">
-            <%= profile_fields.label :username, "ユーザー名", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= profile_fields.text_field :username, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+            <div>
+              <%= f.label :current_password, "現在のパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.password_field :current_password, autocomplete: "current-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-teal-300" %>
+              <p class="text-gray-600 text-xs italic mt-1">変更を確認するために現在のパスワードが必要です</p>
+            </div>
           </div>
 
-          <div class="mb-4">
-            <%= profile_fields.label :avatar, "プロフィール画像", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= profile_fields.file_field :avatar, direct_upload: true, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-            <% if current_user.profile.avatar.attached? %>
-              <%= cl_image_tag current_user.profile.avatar.key, class: "mt-2 rounded-full", width: 100, height: 100, crop: :fill %>
+          <div class="md:col-span-1">
+            <%= f.fields_for :profile do |profile_fields| %>
+              <div class="space-y-4">
+                <div class="text-center">
+                  <% if current_user.profile.avatar.attached? %>
+                    <%= cl_image_tag current_user.profile.avatar.key, class: "w-32 h-32 rounded-full mx-auto object-cover", crop: :fill %>
+                  <% else %>
+                    <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto">
+                      <svg class="h-16 w-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+                <div>
+                  <%= profile_fields.label :avatar, "プロフィール画像", class: "block text-gray-700 text-sm font-bold mb-2 text-center" %>
+                  <%= profile_fields.file_field :avatar, direct_upload: true, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" %>
+                </div>
+              </div>
             <% end %>
           </div>
-        <% end %>
-
-        <div class="mb-4">
-          <%= f.label :current_password, "現在のパスワード", class: "block text-gray-700 text-sm font-bold mb-2" %>
-          <%= f.password_field :current_password, autocomplete: "current-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-          <p class="text-gray-600 text-xs italic mt-1">変更を確認するために現在のパスワードが必要です</p>
         </div>
 
         <div class="flex items-center justify-between mt-6">
-          <%= link_to "戻る", :back, class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-          <%= f.submit "保存", class: "bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+          <%= link_to "戻る", :back, class: "bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300" %>
+          <%= f.submit "保存", class: "bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300" %>
         </div>
       <% end %>
     </div>

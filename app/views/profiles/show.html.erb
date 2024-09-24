@@ -15,7 +15,7 @@
         </div>
         <% if current_user == @profile.user %>
          <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
-          <%= link_to '木のカスタマイズ', '#', class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
+          <%= link_to '木のカスタマイズ', edit_tree_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
         <% end %>
       </div>
     </aside>
