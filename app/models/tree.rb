@@ -35,6 +35,11 @@ class Tree < ApplicationRecord
     :ancient
   end
 
+  def shrink
+    self.svg_data = generate_tree_svg
+    save
+  end
+
   private
 
   def generate_leaf(x, y, message)

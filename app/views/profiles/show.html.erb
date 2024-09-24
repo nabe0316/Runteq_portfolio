@@ -15,7 +15,7 @@
         </div>
         <% if current_user == @profile.user %>
          <%= link_to 'プロフィール編集', edit_user_registration_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block mb-4 transition duration-300' %>
-          <%= link_to '木のカスタマイズ', '#', class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
+          <%= link_to '木のカスタマイズ', edit_tree_path, class: 'w-full bg-gray-200 hover:bg-gray-300 py-2 rounded text-center block transition duration-300' %>
         <% end %>
       </div>
     </aside>
@@ -28,7 +28,6 @@
           <div class="tree-container mx-auto" style="width: 400px; height: 400px;" data-controller="tree">
             <%= @profile.user.tree.svg_data.html_safe %>
           </div>
-          <p class="mt-4 text-center text-gray-600">現在の成長段階: <%= t("tree.stages.#{@profile.user.tree.current_stage}") %></p>
         <% else %>
           <p class="text-center text-gray-600">まだメッセージがありません。</p>
         <% end %>

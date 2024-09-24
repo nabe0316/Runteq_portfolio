@@ -1,5 +1,7 @@
 class MessagesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_message, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def index
     @q = current_user.messages.ransack(params[:q])
@@ -36,7 +38,7 @@ class MessagesController < ApplicationController
 
   def destroy
     @message.destroy
-    redirect_to home_path, notice: 'メッセージが削除されました。'
+    redirect_to home_path, notice: 'メッセージと対応する葉が削除されました。'
   end
 
   def autocomplete
@@ -48,7 +50,18 @@ class MessagesController < ApplicationController
   private
 
   def set_message
-    @message = current_user.messages.find(params[:id])
+    @message = current_user.messages.find_by(id: params[:id])
+    unless @message
+      flash[:alert] = "このメッセージは閲覧できません。"
+      redirect_to home_path
+    end
+  end
+
+  def authorize_user
+    unless @message.user == current_user
+      flash[:alert] = "このメッセージを編集する権限がありません。"
+      redirect_to home_path
+    end
   end
 
   def message_params

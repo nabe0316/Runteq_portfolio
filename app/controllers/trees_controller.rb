@@ -8,7 +8,7 @@ class TreesController < ApplicationController
   def update
     if @tree.update(tree_params)
       @tree.grow
-      redirect_to root_path, notice: '木のカスタマイズが成功しました。'
+      redirect_to home_path, notice: '木のカスタマイズが成功しました。'
     else
       render :edit
     end
