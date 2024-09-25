@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.feature "User authentication", type: :feature do
+RSpec.feature "ユーザーログアウト", type: :feature do
   let(:user) { create(:user) }
 
-  scenario "user logs out" do
+  scenario "ユーザーがログアウトする" do
     sign_in user
     visit home_path
 

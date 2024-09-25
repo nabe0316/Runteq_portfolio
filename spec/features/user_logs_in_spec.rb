@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.feature "User logs in", type: :feature do
+RSpec.feature "ユーザー認証", type: :feature do
   let(:user) { create(:user, email: 'name@example.com', password: 'password') }
 
-  scenario "with valid credentials" do
+  scenario "有効な認証情報でログインする" do
     visit new_user_session_path
 
     fill_in "メールアドレス", with: user.email

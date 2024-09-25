@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.feature "User signs up", type: :feature do
-  scenario "with valid credentials" do
+RSpec.feature "ユーザー新規登録", type: :feature do
+  scenario "有効な情報でユーザー登録する" do
     visit new_user_registration_path
 
     fill_in "ユーザー名", with: "name"
