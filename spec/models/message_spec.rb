@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Message, type: :model do
+
   describe 'バリデーション' do
     it '有効な属性の場合は有効である' do
       message = build(:message)
