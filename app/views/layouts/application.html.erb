@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html class="h-full">
+<html class="h-full" lang="ja">
   <head>
-    <title>PortfolioApp</title>
+    <title><%= content_for?(:title) ? yield(:title) : "感謝の木" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -10,6 +10,12 @@
     <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %> 
   </head>
+
+    <meta property="og:title" content="<%= content_for?(:og_title) ? yield(:og_title) : '感謝の木 - あなたの感謝を可視化するアプリ' %>" />
+    <meta property="og:description" content="<%= content_for?(:og_description) ? yield(:og_description) : '日々の感謝の気持ちを木として育てよう。' %>" />
+    <meta property="og:url" content="<%= request.original_url %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="感謝の木" />
 
   <body class="flex flex-col h-full">
     <%= render 'shared/header' %>
