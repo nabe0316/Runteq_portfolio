@@ -1,0 +1,59 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [ main ] 
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1.2  
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libpq-dev
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Setup database
+      env:
+        RAILS_ENV: test
+        POSTGRES_PASSWORD: postgres
+      run: |
+        bundle exec rails db:create
+        bundle exec rails db:schema:load
+
+    - name: Run tests
+      env:
+        RAILS_ENV: test
+        POSTGRES_PASSWORD: postgres
+      run: bundle exec rspec
+
+    - name: Deploy to Render
+      if: success() 
+      env:
+        RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl -X POST $RENDER_DEPLOY_HOOK_URL
