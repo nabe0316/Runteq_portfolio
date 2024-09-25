@@ -68,9 +68,16 @@ jobs:
       run: |
         bundle exec rails db:create
         bundle exec rails db:schema:load
+<<<<<<< HEAD
 
     - name: Run RSpec tests
       run: bundle exec rspec
 
     - name: Run system tests
       run: bundle exec rspec spec/system
+=======
+    - name: Run tests
+      env:
+        RAILS_ENV: test
+        POSTGRES_PASSWORD: postgres
+>>>>>>> d3a3c28a20710b58d24f729f5ad48c71a1470f97
