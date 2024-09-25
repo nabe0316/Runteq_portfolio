@@ -86,4 +86,18 @@ RSpec.describe MessagesController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    it "メッセージを削除する" do
+      message # 事前にメッセージを作成
+      expect {
+        delete :destroy, params: { id: message.id }
+      }.to change(Message, :count).by(-1)
+    end
+
+    it "ホームページにリダイレクトする" do
+      delete :destroy, params: { id: message.id }
+      expect(response).to redirect_to(home_path)
+    end
+  end
 end
