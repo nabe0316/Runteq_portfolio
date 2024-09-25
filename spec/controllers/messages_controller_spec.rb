@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MessagesController, type: :controller do
   let(:user) { create(:user) }
+  let!(:message) { create(:message, user: user) }
   let(:valid_attributes) { { title: "感謝のメッセージ", content: "ありがとうございます。" } }
   let(:invalid_attributes) { { title: "", content: "" } }
 
@@ -36,9 +37,52 @@ RSpec.describe MessagesController, type: :controller do
         }.to_not change(Message, :count)
       end
 
-      it "テンプレートを再表示する" do
+      it "newテンプレートを再表示する" do
         post :create, params: { message: invalid_attributes }
         expect(response).to render_template(:new)
+      end
+    end
+  end
+
+  describe "GET #show" do
+    it "指定されたメッセージを表示する" do
+      get :show, params: { id: message.id }
+      expect(assigns(:message)).to eq(message)
+    end
+  end
+
+  describe "GET #edit" do
+    it "編集フォームを表示する" do
+      get :edit, params: { id: message.id }
+      expect(assigns(:message)).to eq(message)
+    end
+  end
+
+  describe "PATCH #update" do
+    context "有効なパラメータの場合" do
+      it "メッセージを更新する" do
+        patch :update, params: { id: message.id, message: valid_attributes }
+        message.reload
+        expect(message.title).to eq("感謝のメッセージ")
+      end
+
+      it "更新後にメッセージ詳細ページにリダイレクトする" do
+        patch :update, params: { id: message.id, message: valid_attributes }
+        expect(response).to redirect_to(message_path(message))
+      end
+    end
+
+    context "無効なパラメータの場合" do
+      it "メッセージを更新しない" do
+        original_title = message.title
+        patch :update, params: { id: message.id, message: invalid_attributes }
+        message.reload
+        expect(message.title).to eq(original_title)
+      end
+
+      it "editテンプレートを再表示する" do
+        patch :update, params: { id: message.id, message: invalid_attributes }
+        expect(response).to render_template(:edit)
       end
     end
   end
