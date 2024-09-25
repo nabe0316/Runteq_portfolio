@@ -30,6 +30,10 @@ jobs:
       with:
         ruby-version: 3.1.2
         bundler-cache: true
+    - name: Update Gemfile.lock platforms
+      run: |
+        bundle lock --add-platform x86_64-linux
+        git diff
     - name: Install dependencies
       run: |
         sudo apt-get update
