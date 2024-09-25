@@ -9,12 +9,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      POSTGRES_PASSWORD: password
+      DATABASE_URL: postgres://postgres:password@localhost:5432/portfolio_app_test
 
     services:
       postgres:
         image: postgres:13
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
@@ -24,29 +28,55 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.1.2
         bundler-cache: true
-    - name: Update Gemfile.lock platforms
-      run: |
-        bundle lock --add-platform x86_64-linux
-        git diff
-    - name: Install dependencies
+
+    - name: Install PostgreSQL client
       run: |
         sudo apt-get update
         sudo apt-get install -y libpq-dev
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Yarn
+      run: npm install -g yarn
+
+    - name: Cache node modules
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-yarn-
+
+    - name: Install dependencies
+      run: |
         gem install bundler
+        bundle config set path 'vendor/bundle'
         bundle install --jobs 4 --retry 3
+        yarn install
+
     - name: Setup database
-      env:
-        RAILS_ENV: test
-        POSTGRES_PASSWORD: postgres
       run: |
         bundle exec rails db:create
         bundle exec rails db:schema:load
+
+    - name: Precompile assets
+      run: bundle exec rails assets:precompile
+
+    - name: Run RSpec tests
+      run: bundle exec rspec
+
+    - name: Run system tests
+      run: bundle exec rspec spec/system
     - name: Run tests
       env:
         RAILS_ENV: test
