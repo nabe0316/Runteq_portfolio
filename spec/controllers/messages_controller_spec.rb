@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MessagesController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   let!(:message) { create(:message, user: user) }
   let(:valid_attributes) { { title: "感謝のメッセージ", content: "ありがとうございます。" } }
   let(:invalid_attributes) { { title: "", content: "" } }
@@ -89,7 +90,7 @@ RSpec.describe MessagesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "メッセージを削除する" do
-      message # 事前にメッセージを作成
+      message
       expect {
         delete :destroy, params: { id: message.id }
       }.to change(Message, :count).by(-1)
@@ -98,6 +99,51 @@ RSpec.describe MessagesController, type: :controller do
     it "ホームページにリダイレクトする" do
       delete :destroy, params: { id: message.id }
       expect(response).to redirect_to(home_path)
+    end
+  end
+
+  describe "認可テスト" do
+    context "ログインしていないユーザー" do
+      before do
+        sign_out :user
+        session.clear
+      end
+
+      it "indexアクションにアクセスできない" do
+        get :index
+        expect(response).to have_http_status(:redirect)
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "showアクションにアクセスできない" do
+        get :show, params: { id: message.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "newアクションにアクセスできない" do
+        get :new
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "createアクションを実行できない" do
+        post :create, params: { message: attributes_for(:message) }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "editアクションにアクセスできない" do
+        get :edit, params: { id: message.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "updateアクションを実行できない" do
+        patch :update, params: { id: message.id, message: attributes_for(:message) }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "destroyアクションを実行できない" do
+        delete :destroy, params: { id: message.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 end
